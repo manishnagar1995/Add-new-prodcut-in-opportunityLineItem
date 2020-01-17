@@ -1,0 +1,13 @@
+.THIS .icn svg{
+    fill : white;
+}
+.slds-icon .slds-icon-text-default {
+    fill: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));
+}
+.slds-icon-text-default {
+    fill: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));
+}
+
+
+
+
