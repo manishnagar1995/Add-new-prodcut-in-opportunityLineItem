@@ -11,7 +11,7 @@
                       <!--*********************** Modal Body **************************** 
                     <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">-->
                         
-                        <lightning-record-edit-form object-api-name="OpportunityLineItem" onsubmit={handleSubmit} >
+                        <lightning-record-edit-form object-api-name="OpportunityLineItem" onsubmit={handleSubmit}  class ="bodycolor">
                             <header class="slds-modal__header">
                                 <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" style="fill: white;" title="Close" onclick={closeModal}>
                                     <lightning-icon icon-name="utility:close" size="medium" style="fill: white;">
@@ -20,10 +20,10 @@
                                 </button>
                                 <h2 id="modal-heading-01" class="slds-text-heading_small slds-hyphenate">Add Products</h2>
                             </header>
-                            <lightning-messages></lightning-messages>
-                                    <lightning-layout multiple-rows="true" vertical-align="end" style="background: beige;">
+                            <lightning-messages class ="bodycolor"></lightning-messages>
+                                    <lightning-layout multiple-rows="true" vertical-align="end" >
                                                     <lightning-layout-item size="6" padding="around-small">
-                                                        <lightning-input-field field-name="product_type__c" value={prodName} required></lightning-input-field>
+                                                        <lightning-input-field field-name="product_type__c"   required></lightning-input-field>
                                                     </lightning-layout-item>
                                                     <lightning-layout-item size="6" padding="around-small">
                                                         <lightning-input-field field-name="Quantity"></lightning-input-field>  
@@ -40,8 +40,9 @@
                                             </lightning-layout>
                                              <!--*********************** Modal Footer **************************** -->
                                             <footer class="slds-modal__footer">
-                                            <lightning-button type="submit" label="Save" variant="brand"></lightning-button>
-                                              </footer>
+                                                <lightning-button label="Cancel" variant="neutral" onclick={closeModal}></lightning-button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <lightning-button type="submit" label="Save" variant="brand"></lightning-button>
+                                            </footer>
                                         </lightning-record-edit-form>  
                                      </div>
                       <!--   </div>-->

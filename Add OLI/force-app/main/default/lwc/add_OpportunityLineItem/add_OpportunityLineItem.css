@@ -1,11 +1,8 @@
-.THIS .icn svg{
-    fill : white;
+.bodycolor {
+    background: rgb(255, 255, 255);  
 }
-.slds-icon .slds-icon-text-default {
-    fill: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));
-}
-.slds-icon-text-default {
-    fill: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));
+.slds-notify_container .slds-is-relative{
+    background: rgb(255, 255, 255);
 }
 
 
