@@ -1,7 +1,13 @@
 <template>
-    <div class="slds-p-around_medium lgc-bg">
-        <lightning-button value="AddProducts" label="Add Products" onclick={handleClick} ></lightning-button>
-    </div>
+    <div class="slds-box boxTopborder" style="border-bottom-left-radius: inherit !important; border-bottom-right-radius: inherit !important;" >
+    <lightning-card  variant="Narrow"  title="Product" icon-name="standard:product">
+        <lightning-button value="AddProducts" label="Add Products" onclick={handleClick} slot="actions" ></lightning-button>
+    </lightning-card>
+   </div>
+         <!--<lightning-button-icon  icon-name="utility:down" variant="border-filled" alternative-text="Show More" slot="actions"></lightning-button-icon>
+      <div class="slds-p-around_medium lgc-bg">
+        <button class="slds-button slds-button_neutral" label="Add Products"   onclick={handleClick} slot="actions"></button>
+    </div>-->
     <template if:true={openModal}>
         <div class="demo-only" style="height: 640px;">
             <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
@@ -11,7 +17,13 @@
                       <!--*********************** Modal Body **************************** 
                     <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">-->
                         
-                        <lightning-record-edit-form object-api-name="OpportunityLineItem" onsubmit={handleSubmit}  class ="bodycolor">
+                        <lightning-record-edit-form 
+                                                    object-api-name="OpportunityLineItem"   
+                                                    class ="bodycolor"
+                                                    onload={setDefaults}
+                                                    onsubmit={handleSubmit}
+                                                    onerror ={handleError}
+                                                    onsuccess={handleOnSuccess} >
                             <header class="slds-modal__header">
                                 <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" style="fill: white;" title="Close" onclick={closeModal}>
                                     <lightning-icon icon-name="utility:close" size="medium" style="fill: white;">
@@ -50,4 +62,27 @@
             <div class="slds-backdrop slds-backdrop_open"></div>
         </div>
     </template>
+    <!--***************************** SHOW Data Related Opportunitylineitem********************************************-->
+        <template if:true={areDetailsVisible}>
+                <lightning-datatable  
+                                       key-field="Id" 
+                                       data={showdprod} 
+                                       columns={columns} 
+                                       hide-checkbox-column
+                                       onrowaction={handleRowAction}>
+                                    </lightning-datatable>
+            
+        <div class="slds-box center" style="border-top-left-radius: inherit !important; border-top-right-radius: inherit !important;"  slot="footer">
+            {recordId}
+            <p><lightning-formatted-url value="my/path" ></lightning-formatted-url></p>
+            <p><lightning-formatted-url value="https://manishnagar-dev-ed.lightning.force.com/" 
+                label="My Cool Website" target="_parent" ></lightning-formatted-url></p>
+            <p><lightning-formatted-url  label="View All"
+                 value="https://manishnagar-dev-ed.lightning.force.com/lightning/r/0060o00001OANQKAA5/related/OpportunityLineItems/view" 
+                  target="_self" ></lightning-formatted-url></p>
+                
+            <a class="slds-align_absolute-center slds-m-top_xx-small" style="text-decoration: none;" href="/lightning/r/' {recordId} '/related/OpportunityLineItem/view">Show All</a>
+        </div>
+    </template>
+
 </template>

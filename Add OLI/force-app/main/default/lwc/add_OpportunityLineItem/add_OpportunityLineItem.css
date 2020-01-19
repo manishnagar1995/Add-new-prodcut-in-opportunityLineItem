@@ -5,6 +5,30 @@
     background: rgb(255, 255, 255);
 }
 
+.boxTopborder {
+    border-top-width: 3px;
+    border-top-color: rgb(176, 173, 171);
+    border-top-style: solid;
+}
+/*
+
+.slds-button_icon-bare {
+    display: none;
+}
+.slds-th__action .slds-th__action-button
+ { display: none; }*/
+ .slds-button__icon{
+     display:none;
+ }
+/*
+.lightning-primitive-icon {
+    display: none;
+}
+.slds-button_icon-bare{
+    display: none;
+}*/
+
+
 
 
 
