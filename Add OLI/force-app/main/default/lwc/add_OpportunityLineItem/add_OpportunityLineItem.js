@@ -1,3 +1,5 @@
+/* eslint-disable no-unreachable */
+/* eslint-disable no-eval */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-debugger */
 /* eslint-disable guard-for-in */
@@ -17,26 +19,28 @@ const actions = [
     { label: 'Edit', name: 'edit' },
     { label: 'Delete', name: 'delete' },
 ];
-
+const link = "/lightning/r/";
+const link2= "/related/OpportunityLineItem/view";
+//"{! 'Shipping-Details-StageId-' + (counter + 1)}"
 export default class Add_OpportunityLineItem extends NavigationMixin(LightningElement) {
-    @track openModal=false;
-    @track objectapiname;
     @api recordId;
+    tempShowProd;
+    @track openModal=false;
+    @track number ;
+    @track LinkRelted = this.recordId;
+    @track objectapiname;
     @track error;
+    @track editopenModal;
     @track prodName;
     @track pbentry;
     @track showdprod = [];
     @track areDetailsVisible;
+   
+    
    // @track showlis =[];
- //  const link = '/lightning/r/'+ recordId +'/related/OpportunityLineItem/view';
+   
     @track columns = [
-        {
-            label: 'Product',
-            fieldName: 'nameUrl',
-            type: 'url',
-            typeAttributes: {label: { fieldName: 'Name' }},
-            sortable: true
-        },
+        { label: 'Product', fieldName: 'nameUrl',type: 'url', typeAttributes: {label: { fieldName: 'product_type__c' }}, },
          {label: 'QUANTITY',fieldName: 'Quantity', type: 'number',cellAttributes: { alignment: 'left' }},
          {label: 'SALES PRICE',fieldName: 'UnitPrice', type: 'currency',cellAttributes: { alignment: 'left' }},  
          {label: 'DATE',fieldName: 'ServiceDate', type: 'Date'}, 
@@ -45,60 +49,49 @@ export default class Add_OpportunityLineItem extends NavigationMixin(LightningEl
      
         @wire(showallprod, {oppId:'$recordId'})
         getoliItem(result) {
-        const { data, error } = result;
-        if(data) {
-            this.areDetailsVisible = true;
-            let nameUrl;
-            console.log('data==========',JSON.stringify(data));
-            this.showdprod = data.map(row => { 
-                console.log('row=========='+JSON.stringify(row));
-                nameUrl =`/${row.Id}`;
-                console.log('32434=========='+nameUrl);
-                console.log('map======',{...row , nameUrl});
-                return {...row , nameUrl}
-            })
-            console.log('showlist===',this.showdprod);
-            this.error = null;
-        }
-        if(error) {
+            this.tempShowProd = result;
+       if(result.data) {
+           if(result.data.oliCount >= 0){
+              let nameUrl;
+             
+             if( result.data.oliCount  > 0){
+                this.areDetailsVisible = true;
+               }
+               else{
+                this.areDetailsVisible = false;
+                console.log('testvisible=====>',this.areDetailsVisible);
+             }
+             if(result.data.oliCount <= 6 ){
+                  this.number  ='Prodcuts ('+ result.data.oliCount +')'; 
+             }else{
+                this.number  ='Prodcuts ('+ 6 +'+)'; 
+             }this.showdprod = result.data.oliItem.map(row => { 
+                 nameUrl =`/${row.Id}`;
+                 return {...row , nameUrl}
+             })
+           }
+           else{
+            this.areDetailsVisible = false;
+            console.log('testvisible=====>',this.areDetailsVisible);
+           }
+         }
+        if(result.error) {
             this.error = error;
             this.showdprod = [];
         }
     }
-
-  
-   /* @wire(showallprod, {oppId:'$recordId'})
-    getoliItem(result) {
-       // this.showdprod = showdprod;
-      console.log('test1233============',result);
-       this.showlis = result.data;
-     //  console.log('qqwq============',JSON.stringify(result.data));
-       //console.log('qwere============',this.showlis.length);
-       
-        if (result) {
-            
-            this.areDetailsVisible = true;
-            this.showdprod = this.showlis;
-           // console.log('datashow================', this.searchData );
-        } else if (result.error) {
-            this.error = result.error;
-        }
-    }
+ 
     handleClick(){
         this.openModal=true;
-       // console.log('Test========',   this.openModal);
-    }*/
-    setDefaults(){
-
+      
     }
+    
     handleRowAction(event) {
         const actionName = event.detail.action.name;
-        console.log('actionnaME======',actionName);
         const row = event.detail.row;
-        console.log('actionnrow======',JSON.stringify(row));
+    
         switch (actionName) {
             case 'edit':
-                console.log('this.editrecord(row);===',row);
                 this.editrecord(row);
                 break;
             case 'delete':
@@ -112,56 +105,54 @@ export default class Add_OpportunityLineItem extends NavigationMixin(LightningEl
     }
 
     editrecord(row){
-        console.log('row_id============',JSON.stringify(row));
-        const { id } = row;
-        console.log('id', this.findRowIndexById(id))
-        const index = this.findRowIndexById(id);
-        console.log('row_idesit============',index);
-    }
+        this.editopenModal=true;
+        const id = row;
+        this.recordIdoli = id.Id;
+       }
+
     deleteRow(row) {
         const id = row;
-        console.log('row_iddete============', id.Id);
-        deleteprod({ oliId : id.Id });
-       // const { id } = row;
-       // const index = this.findRowIndexById(id);
-       // console.log('row_id============',index);
-       /* if (index !== -1) {
-            this.data = this.data
-                .slice(0, index)
-                .concat(this.data.slice(index + 1));
-        }*/
-    }
+    
+        deleteprod({ oliId : id.Id })   
+        .then(result => {
+            // eslint-disable-next-line no-console
+            console.log('result ====> ' + result);
+                 // showing success message
+                this.dispatchEvent(new ShowToastEvent({
+                    title: 'Success!!',
+                    message: 'Product Deleted successfully',
+                    variant: 'success'
+                }),);
+                eval("$A.get('e.force:refreshView').fire();");
+                return refreshApex(this.tempShowProd); 
+                
+            })
+            .catch(error => {
+                window.console.log('Error ====> '+error);
+                this.dispatchEvent(new ShowToastEvent({
+                    title: 'Error!!', 
+                    message: error.message, 
+                    variant: 'error'
+                }),);
+            });
+     }
 
-    /*7findRowIndexById(id) {
-        let ret = -1;
-        this.data.some((row, index) => {
-            if (row.id === id) {
-                ret = index;
-                return true;
-            }
-            return false;
-        });
-        return ret;
-    }
-
-    showRowDetails(row) {
-        this.record = row;
-    }*/
+   
 
     handleSubmit(event){
         const fields = event.detail.fields;
-        let oppid =this.recordId;
-        //fields.OpportunityId = oppid;
+      //  let oppid =this.recordId;
+        // console.log('test234565========',oppid)
         fields.OpportunityId = this.recordId;
         event.preventDefault();
         searchImperativeContactList({ prodNames : fields.product_type__c,oppids: this.recordId })
         .then(result => {
-         //   console.log('result == ', JSON.stringify(result));
             this.pbentry = result.Id; 
             fields.PricebookEntryId =this.pbentry;
             this.template.querySelector('lightning-record-edit-form').submit(fields);  
             this.openModal=false;
-            return refreshApex(this.showdprod);
+            console.log('temp==========',this.tempShowProd);
+           return refreshApex(this.tempShowProd);
         })
         .catch(error => {
             this.error = error;
@@ -176,16 +167,37 @@ export default class Add_OpportunityLineItem extends NavigationMixin(LightningEl
     handleOnSuccess(){
         const showSuccess = new ShowToastEvent({
             title: 'Success!!',
-            message: 'This is Success message.',
-            variant: 'Success',
+            message: 'Product added successfully',
+            variant: 'success'
         });
         this.dispatchEvent(showSuccess);
-      //  this.openModal=false;
+        eval("$A.get('e.force:refreshView').fire();");
+        return refreshApex(this.tempShowProd);
     }
 
     closeModal(){
         this.openModal=false;
     }
+
+
+handleSubmit1(event){
+    const fields = event.detail.fields;
+    fields.id = this.recordIdoli;
+    this.template.querySelector('lightning-record-edit-form').submit(fields); 
+    this.editopenModal=false;
+    return refreshApex(this.tempShowProd);
+}
+handleOnSuccess1(){
+    const showSuccess = new ShowToastEvent({
+        title: 'Success!!',
+        message: 'Product updated successfully',
+        variant: 'success'
+    });
+    this.dispatchEvent(showSuccess);
+    eval("$A.get('e.force:refreshView').fire();");
+    return refreshApex(this.tempShowProd);
+}
+
 
     
 

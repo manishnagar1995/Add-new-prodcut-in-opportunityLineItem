@@ -31,6 +31,7 @@ public with sharing class Add_OpportunityLientItem {
     }
     @AuraEnabled
     public static void  deletProducts(String oliId) {
+    try {
          System.debug('oliIdasdf============'+oliId);
         if(oliId != null){
             OpportunityLineItem oli =new OpportunityLineItem();
@@ -38,12 +39,35 @@ public with sharing class Add_OpportunityLientItem {
             System.debug('oliId============'+oliId);
             delete oli;
         }
+        }
+         catch(Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
     }
      @AuraEnabled(Cacheable = true)
-    public static List<OpportunityLineItem>  retriveallProducts(String oppId) {
-        List<OpportunityLineItem> oliItem = [SELECT Id,Name,Product2.Name,Quantity,UnitPrice,ServiceDate, OpportunityId FROM OpportunityLineItem where OpportunityId=:oppId ORDER BY createdDate DESC LIMIT 6];
-        system.debug('OliItem========== '+oliItem);
-         return oliItem; 
+      public static OpportunityLineItemwrapperClass retriveallProducts(String oppId) {
+        OpportunityLineItemwrapperClass wrapperClass= new OpportunityLineItemwrapperClass();
+        List<OpportunityLineItem> oliList = [SELECT Id,Name,product_type__c,Product2.Name,Quantity,UnitPrice,ServiceDate, OpportunityId FROM OpportunityLineItem where OpportunityId=:oppId ORDER BY createdDate DESC LIMIT 6];
+       try{ 
+        wrapperClass.oliItem = oliList;
+       
+        wrapperClass.oliCount = [SELECT COUNT() FROM OpportunityLineItem  
+                                             WHERE OpportunityId =:oppId 
+                                             ];
+         wrapperClass.success = true;
+       }
+        catch(Exception e){
+            wrapperClass.success = false;
+        }
+         return wrapperClass; 
+    }
+
+
+       // wrapper or Inner class with @AuraEnabled {get;set;} properties*    
+    public class OpportunityLineItemwrapperClass{
+        @AuraEnabled public  List<OpportunityLineItem>  oliItem {get;set;}
+        @AuraEnabled public Integer oliCount {get;set;}
+        @AuraEnabled public Boolean success {get;set;}
     }
     
 }
