@@ -1,23 +1,16 @@
 <template>
-    <div class="slds-box boxTopborder" style="border-bottom-left-radius: inherit !important; border-bottom-right-radius: inherit !important;" >
+    <div class="slds-box boxTopborder" style="height: 64px; border-bottom-left-radius: inherit !important; border-bottom-right-radius: inherit !important;" >
     <lightning-card class=" slds-truncate" variant="Narrow"  title={number} icon-name="standard:product">
         <lightning-button  value="AddProducts" label="Add Products" onclick={handleClick} slot="actions" ></lightning-button>
     </lightning-card>
    </div>
-         <!--<lightning-button-icon  icon-name="utility:down" variant="border-filled" alternative-text="Show More" slot="actions"></lightning-button-icon>
-      <div class="slds-p-around_medium lgc-bg">
-        <button class="slds-button slds-button_neutral" label="Add Products"   onclick={handleClick} slot="actions"></button>
-    </div>-->
     <template if:true={openModal}>
         <div class="demo-only" style="height: 640px;">
             <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                 <div class="slds-modal__container slds-p-around_medium">
-                     <!--*********************** Modal header **************************** -->
                      
-                      <!--*********************** Modal Body **************************** 
-                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">-->
-                        
-                        <lightning-record-edit-form 
+                      <!--*********************** Modal Body **************************** -->
+                     <lightning-record-edit-form 
                                                     object-api-name="OpportunityLineItem"   
                                                     class ="bodycolor"
                                                     onsubmit={handleSubmit}
@@ -65,10 +58,7 @@
         <div class="demo-only" style="height: 640px;">
             <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                 <div class="slds-modal__container slds-p-around_medium">
-                     <!--*********************** Modal header **************************** -->
-                     
-                      <!--*********************** Modal Body **************************** 
-                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">-->
+                      <!--*********************** Modal Body **************************** -->
                         
                         <lightning-record-edit-form  record-id={recordIdoli}
                                                     object-api-name="OpportunityLineItem"   
@@ -109,7 +99,6 @@
                                             </footer>
                                         </lightning-record-edit-form>  
                                      </div>
-                      <!--   </div>-->
             </section>
             <div class="slds-backdrop slds-backdrop_open"></div>
         </div>
@@ -125,18 +114,8 @@
                                     </lightning-datatable>
             
         <div class="slds-box center" style="border-top-left-radius: inherit !important; border-top-right-radius: inherit !important;"  slot="footer">
-           <!-- {recordId}
-            <p><lightning-formatted-url value="my/path" ></lightning-formatted-url></p>
-            <p><lightning-formatted-url value="https://manishnagar-dev-ed.lightning.force.com/" 
-                label="My Cool Website" target="_parent" ></lightning-formatted-url></p>
-                  {recordId}
-                '/lightning/r/{recordId}/related/OpportunityLineItem/view'
-                -->
-                <p><lightning-formatted-url  label="View All"
-                    value='lightning/r/recordId/related/OpportunityLineItem/view' 
-                     target="_self" ></lightning-formatted-url></p>
-             
-            <a class="slds-align_absolute-center slds-m-top_xx-small" style="text-decoration: none;" href='/lightning/r/{recordId}/related/OpportunityLineItem/view'>Show All</a>
+            <lightning-button class="slds-align_absolute-center slds-m-top_xx-small" variant="base" label="View All" onclick={navigateRelatedListView}>
+           </lightning-button>
         </div>
     </template>
 

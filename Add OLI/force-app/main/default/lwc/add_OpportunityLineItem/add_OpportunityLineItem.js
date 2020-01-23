@@ -15,6 +15,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import showallprod from '@salesforce/apex/Add_OpportunityLientItem.retriveallProducts';
 import deleteprod from '@salesforce/apex/Add_OpportunityLientItem.deletProducts';
 import { refreshApex } from '@salesforce/apex';
+
 const actions = [
     { label: 'Edit', name: 'edit' },
     { label: 'Delete', name: 'delete' },
@@ -40,7 +41,7 @@ export default class Add_OpportunityLineItem extends NavigationMixin(LightningEl
    // @track showlis =[];
    
     @track columns = [
-        { label: 'Product', fieldName: 'nameUrl',type: 'url', typeAttributes: {label: { fieldName: 'product_type__c' }}, },
+        { label: 'Product', fieldName: 'nameUrl',type: 'url', typeAttributes: {label: { fieldName: 'product_type__c' ,cellAttributes: { alignment: 'center' }}}, },
          {label: 'QUANTITY',fieldName: 'Quantity', type: 'number',cellAttributes: { alignment: 'left' }},
          {label: 'SALES PRICE',fieldName: 'UnitPrice', type: 'currency',cellAttributes: { alignment: 'left' }},  
          {label: 'DATE',fieldName: 'ServiceDate', type: 'Date'}, 
@@ -197,8 +198,15 @@ handleOnSuccess1(){
     eval("$A.get('e.force:refreshView').fire();");
     return refreshApex(this.tempShowProd);
 }
-
-
-    
-
+navigateRelatedListView(){
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordRelationshipPage',
+            attributes: {
+                recordId: this.recordId,
+                objectApiName: 'Opportunity',
+                relationshipApiName: 'OpportunityLineItems',
+                actionName: 'view'
+            },
+        });
+    }
 }
