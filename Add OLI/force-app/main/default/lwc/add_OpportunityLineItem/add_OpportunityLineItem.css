@@ -17,27 +17,6 @@
 .slds-button_neutral{
     font-weight: 100;
  }
-
-
-/*
-
-.slds-button_icon-bare {
-    display: none;
-}
-.slds-th__action .slds-th__action-button
- { display: none; }*/
  .slds-button__icon{
      display:none;
  }
-/*
-.lightning-primitive-icon {
-    display: none;
-}
-.slds-button_icon-bare{
-    display: none;
-}*/
-
-
-
-
-
